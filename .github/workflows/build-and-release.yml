@@ -2,10 +2,18 @@ name: Build and Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
     branches:
       - main
+  release:
+    types: [created]
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+  packages: write
+
 
 jobs:
   build-and-release:
