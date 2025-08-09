@@ -30,7 +30,6 @@ public class CommandExecutor {
                 String value = args.get(2);
                 long ttl = -1L;
 
-                // Optional TTL handling
                 if (args.size() > 4) {
                     String optType = args.get(3).toLowerCase();
                     if (optType.equals("ex")) {

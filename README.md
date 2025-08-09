@@ -8,32 +8,38 @@ Currently implemented features:
 - Basic command execution via a `CommandExecutor` (see supported commands in the Commands section).
 - Multiple clients can connect concurrently.
 - Lightweight, minimal dependencies.
+- No CLI support
 
 ## Run with Docker
-### 1. Build the Docker image
-From the root of the project:
+### 1. Pull the Docker image
 
 ```bash
-docker build -t imbed .
+docker pull 3akare/imbed:latest
 ```
 
 ### 2. Run the container
+
 ```bash
-docker run -d -p 6379:6379 --name imbed-server imbed
+docker run -d -p 6379:6379 --name imbed-server 3akare/imbed:latest
 ```
+
 This will:
+
 * Start the `imbed` server in a container.
 * Map container port `6379` to host port `6379`.
 
 ### 3. Stop the container
+
 ```bash
 docker stop imbed-server
 ```
 
 ### 4. Remove the container
+
 ```bash
 docker rm imbed-server
 ```
+
 
 ## Commands
 Example supported commands (will vary based on your `CommandExecutor` implementation):
