@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - 'v*.*.*'
-      branches:
+    branches:
         - main
 jobs:
   build-and-release:
