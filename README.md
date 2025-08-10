@@ -44,17 +44,19 @@ docker rm imbed-server
 ## Commands
 Example supported commands (will vary based on your `CommandExecutor` implementation):
 
-| Command         | Description                  | Example          |
-| --------------- | ---------------------------- | ---------------- |
-| `SET key value` | Stores a value under a key   | `SET name David` |
-| `GET key`       | Retrieves the value of a key | `GET name`       |
-| `DEL key`       | Deletes a key-value pair     | `DEL name`       |
-| `PING`          | Tests connection             | `PING`           |
+| Command                      | Description                                                                      | Example                     | Response (Success)   |
+| ---------------------------- | -------------------------------------------------------------------------------- | --------------------------- | -------------------- |
+| `PING`                       | Tests the connection                                                             | `PING`                      | `+PONG`              |
+| `ECHO message`               | Returns the given message                                                        | `ECHO hello_world`          | `$11\r\nhello_world` |
+| `SET key value`              | Stores a value under a key                                                       | `SET name David`            | `+OK`                |
+| `SET key value [EX\|PX] ttl` | Stores a value with a time-to-live (seconds or milliseconds)                     | `SET username 3akare EX 10` | `+OK`                |
+| `GET key`                    | Retrieves the value of a key                                                     | `GET name`                  | `$5\r\nDavid`        |
+| `DEL key`                    | Deletes a key-value pair                                                         | `DEL name`                  | `:1`                 |
+| `KEYS`                       | Retrieves all keys                                                               | `KEYS`                      | `*1\r\n$4\r\nname`   |
+| `EXPIRE key ttl`             | Updates TTL of a key-value pair                                                  | `EXPIRE name 20`            | `:1`                 |
+| `TTL key`                    | Retrieves remaining TTL of a key in seconds (`-1` = no expire, `-2` = not found) | `TTL name`                  | `:10`                |
 
 ## ⚙️ Development Notes
-
 * Default port is **6379**.
 * Server can be configured by editing the `main` method in `Main.java`.
 * Each client runs in its own thread to allow concurrent access.
-
----

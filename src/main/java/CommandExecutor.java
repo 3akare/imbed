@@ -56,6 +56,59 @@ public class CommandExecutor {
                 return "$" + val.value.length() + "\r\n" + val.value + "\r\n";
             }
 
+            case "del": {
+                if (args.size() < 2) return "-ERR wrong number of arguments\r\n";
+                String key = args.get(1);
+                ImbedValue val = store.remove(key);
+                int removed = (val == null) ? 0 : 1;
+                return ":" + removed + "\r\n";
+            }
+
+            case "expire": {
+                if (args.size() < 3) return "-ERR wrong number of arguments\r\n";
+                String key = args.get(1);
+                String ttlStr = args.get(2);
+                ImbedValue val = store.get(key);
+
+                if (val == null) return ":" + 0 + "\r\n";
+                long seconds;
+                try {
+                    seconds = Long.parseLong(ttlStr);
+                } catch (NumberFormatException e) {
+                    return "-ERR value is not an integer or out of range\r\n";
+                }
+                long newExpiry = System.currentTimeMillis() + (seconds * 1000L);
+                val.setTTL(newExpiry);
+                if (val.isExpired()) {
+                    store.remove(key);
+                    return ":" + 0 + "\r\n";
+                }
+                return ":" + 1 + "\r\n";
+            }
+
+            case "ttl": {
+                if (args.size() < 2) return "-ERR wrong number of arguments\r\n";
+                String key = args.get(1);
+                ImbedValue val = store.get(key);
+
+                if (val == null) {
+                    return ":" + -2 + "\r\n";
+                }
+
+                long ttlAbs = val.getTTL();
+                if (ttlAbs == -1L) {
+                    return ":" + -1 + "\r\n";
+                }
+                if (ttlAbs <= now) {
+                    store.remove(key);
+                    return ":" + -2 + "\r\n";
+                }
+
+                long remainingMs = ttlAbs - now;
+                long remainingSec = remainingMs / 1000L;
+                return ":" + remainingSec + "\r\n";
+            }
+
             case "keys": {
                 StringBuilder resp = new StringBuilder();
                 resp.append("*").append(store.size()).append("\r\n");
